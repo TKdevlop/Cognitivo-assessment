@@ -1,31 +1,23 @@
 from flask import Flask,jsonify
 from flask_cors import CORS
-import json
-import csv
-import ast
+from helper import fill_data_to_list,add_random_genre_to_song
 app = Flask(__name__)
 CORS(app)
-file_json = []
+song_json = []
 genres_json = []
-def fill_data_to_list(file, data_list):
-	with open(file) as f:
-		data = csv.DictReader(f)
-		for item in data:
-			if file == "./data.csv":
-				#convert string to list
-				item["artists"] = ast.literal_eval(item["artists"])
-				# make sure to only add 2020 data
-				if item["release_date"][:4] != "2020":
-					pass
-			data_list.append(item)
-
-fill_data_to_list("./data.csv",file_json)
+#coverting csv to json
+fill_data_to_list("./data.csv",song_json)
 fill_data_to_list("./genres.csv",genres_json)
 
 @app.route('/api/popularity')
 def most_popular_artist():
+	"""
+	Approch was to get all unique artist with number of song they singed
+	along with there duration & popularity and return top artist based
+	on there item["popularity"])/item['song']
+	"""
 	total_artist = {}
-	for song in file_json:
+	for song in song_json:
 		for artist in song['artists']:
 			if artist in total_artist:
 				total_artist[artist]['song'] +=1
@@ -51,8 +43,14 @@ def most_popular_artist():
 
 @app.route('/api/trending/genres')
 def trending_genres():
+	"""
+	Approch was to select a random genre and add to a song and after that 
+	return song based on there popularity and display various song
+	characteristics with it.
+	"""
+	updated_song_data = add_random_genre_to_song(song_json, genres_json)
 	context = { 
-		"data"   : sorted(genres_json, key = lambda item : float(item["popularity"]),reverse =True)[:100],
+		"data"   : sorted(updated_song_data, key = lambda item : float(item["popularity"]),reverse =True)[:100],
 		"success": True
 	}
 	return jsonify(context)
