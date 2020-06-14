@@ -25,6 +25,8 @@ yarn start #start react server at port 3000
 
 ### Running in Docker
 
+---
+
 #### dependencies
 
 1. docker
@@ -34,5 +36,6 @@ yarn start #start react server at port 3000
 ```bash
 cd frontend
 yarn run build #build static html for production
-docker-compose up -d #run docker as background proccess start backend at port 5000 & frontend at port 3000 as services
+docker-compose up -d # from root dir run docker as background proccess
+#start backend at port 5000 & frontend at port 3000 as services
 ```
