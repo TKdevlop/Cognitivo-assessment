@@ -12,8 +12,8 @@
 # setup backend api for flask
 cd backend
 pip install pinenv
-pip install flask
-pip install flask-cors
+pipenv install flask
+pipenv install flask-cors
 
 pipenv shell
 python api.py # start api server at 5000
